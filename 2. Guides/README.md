@@ -32,6 +32,85 @@ Redirect from one place to another on `<Switch>`
 
 ---
 
+### Route:
+- A Route is always technically “rendered” even though its rendering null. As soon as the app location matches the route’s path, your component will be rendered.
+- When using `component={}`, the component will be rendered with route props. Therefore, any URL params you're inputting are accessible, as is the history. Never use inline functions for these
+- To do inline rendering, use `render={() => ...}`. You can pass routeProps as a param and spread it out over the component (thereby getting access to history, match, and location), like so: 
+```
+render={routeProps => <Component {...routeProps}/>}
+```
+- `<Route component={}>` takes precedence over `<Route render={}>`
+- `children` is used when you _always_ want to render something, regardless of the path, but want it to wrap other components. An example would be to have an animation going to and from every page or having a component wrapper
+- Both `<Route component={}>` and `<Route render={}>` take precedence over `<Route children={}>` so don’t use more than one in the same `<Route>`.
+- You can pass in an array of URLs to `path` so that multiple URLs render the component:
+```
+<Route path={["/users/:id", "/profile/:id"]} component={User} />
+```
+
+- You can pass `strict` which ensures that React Router looks for trailing slashes (`/home/` does not render, while `/home` does)
+- You can pass sensitive to make the URL path case sensitive. Not sure why the hell you would do that outside of token/userId validation
+
+---
+
+### Route Props
+
+#### Match
+A match object contains information about how a `<Route path>` matched the URL. Contains: 
+```
+{
+  params, (i.e. {id: "123456" })
+  isExact, (if the entire URL was matched i.e. true/false)
+  path, (the path pattern i.e. "/users/:id")
+  url, (the actual URL i.e. "users/123456")
+}
+```
+- Pathless `<Route>`s inherit their match object from their parent
+
+#### Location
+Locations represent where the app is now, where you want it to go, or even where it was. It looks like this:
+```
+{
+  key: 'ac3df4', // not with HashHistory!
+  pathname: '/somewhere'
+  search: '?some=search-string',
+  hash: '#howdy',
+  state: {
+    [clickedTheButton]: true
+  }
+}
+```
+- A location object is never mutated so you can use lifecycle hooks to determine when navigation happens
+```
+// usually all you need
+<Link to="/somewhere"/>
+
+// but you can use a location instead
+const location = {
+  pathname: '/somewhere',
+  state: { fromDashboard: true }
+}
+
+<Link to={location}/>
+<Redirect to={location}/>
+history.push(location)
+history.replace(location)
+
+```
+
+#### History
+Refers to the History API (also called "browser history", "hash history" or ""memory history")
+- History is mutable. Therefore, you can `push('/')` and `replace('/')`
+- it is recommended to access the `location` from the render props of `<Route>`, not from `history.location`. 
+- `location` contains the following:
+```
+{
+  hash, (The URL hash fragment)
+  pathname, (i.e. `/dashboard')
+  search, (a query string if it was present i.e. "?s=searchterm")
+  state, (location-specific state that was provided to e.g. push(path, state) when this location was pushed onto the stack. Only available in browser and memory history.)
+}
+```
+
 
 ## To-Do:
 - Check out React Transition Group and combine with React Router

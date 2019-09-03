@@ -24,7 +24,7 @@ function App() {
 }
 
 function Home() {
-  return <h2>Home</h2>;
+  return (<h2>Home</h2>);
 }
 
 function About() {
@@ -39,6 +39,7 @@ function CatchAll() {
 // NESTED ROUTING
 // `/topics` loads <Topics> which then further conditionally renders any Routes that might be in place on that particular component, based on the paths `:id` value
 function Topic({ match }) {
+  
   console.log(`This is the match as part of a single <Topic>: `, match)
   return <h3>Requested Param: {match.params.id}</h3>;
 }
