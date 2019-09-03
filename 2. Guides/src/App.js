@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 function App() {
   return (
@@ -7,9 +7,17 @@ function App() {
       <div>
         <Header />
 
-        <Route exact path="/" component={Home} />
-        <Route path="/about" component={About} />
-        <Route path="/topics" component={Topics} />
+        {/* 
+          To add a catch-all for when no routes match the current location (i.e. a 404 component), we'll need a switch
+          A Switch iterates over all its children and will return the first matching path
+        */}
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/about" component={About} />
+          <Route path="/topics" component={Topics} />
+          {/* Whenever none of the above match, it'll return this. It could also be a component like <CatchAll/> */}
+          <Route render={() => <div>ZOINKS!</div>} />
+        </Switch>
       </div>
     </Router>
   );
@@ -22,6 +30,11 @@ function Home() {
 function About() {
   return <h2>About</h2>;
 }
+
+function CatchAll() {
+  return <h2>WHOOPS</h2>;
+}
+
 
 // NESTED ROUTING
 // `/topics` loads <Topics> which then further conditionally renders any Routes that might be in place on that particular component, based on the paths `:id` value
