@@ -111,6 +111,23 @@ Refers to the History API (also called "browser history", "hash history" or ""me
 }
 ```
 
+---
+
+### Route Props
+
+#### Link
+- As mentioned above, a Link can have a `to={obj}`:
+```
+Link
+  to={{
+    pathname: "/courses",
+    search: "?sort=name",
+    hash: "#the-hash",
+    state: { fromDashboard: true }
+  }}
+/>
+```
+- When adding `replace`, it'll replace the current entry in the history stack. `<Link to="/courses" replace />`
 
 ## To-Do:
 - Check out React Transition Group and combine with React Router
